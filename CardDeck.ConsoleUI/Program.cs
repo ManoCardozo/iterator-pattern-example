@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using CardDeck.Domain.Entities;
 using CardDeck.Application.Iterator;
 using CardDeck.Application.Services;
@@ -11,7 +12,7 @@ namespace CardDeck.ConsoleUI
     {
         private static readonly IDeckService deckService = ServiceLocator.Get<IDeckService>();
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.Title = "Deck of Cards";
             ServiceLocator.Setup();
@@ -31,15 +32,29 @@ namespace CardDeck.ConsoleUI
 
                 Console.Clear();
                 CardView.Render(card);
-                RenderOptions();
                 
-                var input = Console.ReadKey();
-                displayAll = input.KeyChar == 'a';
+                if (displayAll)
+                {
+                    RenderDisplayAllInfo();
+                    await Task.Delay(2000);
+                }
+                else
+                {
+                    RenderOptions();
+                    var input = Console.ReadKey();
+                    displayAll = input.KeyChar == 'a';
+                }
             }
 
             Console.WriteLine();
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
+        }
+
+        private static void RenderDisplayAllInfo()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Displaying next card every 2 seconds...");
         }
 
         private static void RenderOptions()

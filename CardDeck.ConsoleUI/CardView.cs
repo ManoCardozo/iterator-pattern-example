@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using CardDeck.ConsoleUI.Constants;
 using CardDeck.Domain.Entities;
 using CardDeck.Domain.Enums;
 
@@ -28,9 +29,18 @@ namespace CardDeck.ConsoleUI
                     {
                         builder.Append(verticalBorder);
                     }
-                    else if (IsRankPosition(h, w))
+                    else if (IsTopRankPosition(h, w))
                     {
-                        builder.Append(card.Rank);
+                        var rank = GetCardRank(card.Rank);
+                        builder.Append(rank);
+                        w += (rank.Length - 1);
+                    }
+                    else if (IsBottomRankPosition(h, w))
+                    {
+                        var rank = GetCardRank(card.Rank);
+                        var lengthToRemove = rank.Length - 1;
+                        builder.Remove(builder.Length - lengthToRemove, lengthToRemove);
+                        builder.Append(rank);
                     }
                     else if (IsSuitPosition(h, w))
                     {
@@ -47,15 +57,36 @@ namespace CardDeck.ConsoleUI
             Console.Write(builder);
         }
 
-        private static object GetCardSuitCode(CardSuit suit)
+        private static string GetCardRank(CardRank rank)
+        {
+            return rank switch
+            {
+                CardRank.Ace => CardRankSymbol.Ace,
+                CardRank.Two => CardRankSymbol.Two,
+                CardRank.Three => CardRankSymbol.Three,
+                CardRank.Four => CardRankSymbol.Four,
+                CardRank.Five => CardRankSymbol.Five,
+                CardRank.Six => CardRankSymbol.Six,
+                CardRank.Seven => CardRankSymbol.Seven,
+                CardRank.Eight => CardRankSymbol.Eight,
+                CardRank.Nine => CardRankSymbol.Nine,
+                CardRank.Ten => CardRankSymbol.Ten,
+                CardRank.Jack => CardRankSymbol.Jack,
+                CardRank.Queen => CardRankSymbol.Queen,
+                CardRank.King => CardRankSymbol.King,
+                _ => CardRankSymbol.Unknown
+            };
+        }
+
+        private static char GetCardSuitCode(CardSuit suit)
         {
             return suit switch
             {
-                CardSuit.Clubs => Constants.CardSuitSymbol.Clubs,
-                CardSuit.Diamonds => Constants.CardSuitSymbol.Diamonds,
-                CardSuit.Hearts => Constants.CardSuitSymbol.Hearts,
-                CardSuit.Spades => Constants.CardSuitSymbol.Spades,
-                _ => Constants.CardSuitSymbol.Unknown,
+                CardSuit.Clubs => CardSuitSymbol.Clubs,
+                CardSuit.Diamonds => CardSuitSymbol.Diamonds,
+                CardSuit.Hearts => CardSuitSymbol.Hearts,
+                CardSuit.Spades => CardSuitSymbol.Spades,
+                _ => CardSuitSymbol.Unknown,
             };
         }
 
@@ -64,9 +95,14 @@ namespace CardDeck.ConsoleUI
             return (h == height / 2) && (w == width / 2);
         }
 
-        private static bool IsRankPosition(int h, int w)
+        private static bool IsTopRankPosition(int h, int w)
         {
-            return (h == 1 && w == 1) || (h == height - 2 && w == width - 2);
+            return (h == 1 && w == 1);
+        }
+
+        private static bool IsBottomRankPosition(int h, int w)
+        {
+            return (h == height - 2 && w == width - 2);
         }
 
         private static bool IsVerticalBorder(int w)
