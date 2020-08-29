@@ -5,6 +5,6 @@ namespace CardDeck.Application.Services
 {
     public interface IDeckService
     {
-        IList<Card> Build();
+        IEnumerable<Card> Build();
     }
 }

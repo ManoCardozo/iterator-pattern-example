@@ -1,4 +1,6 @@
-﻿using CardDeck.Domain.Enums;
+﻿using System;
+using System.Linq;
+using CardDeck.Domain.Enums;
 using CardDeck.Domain.Entities;
 using System.Collections.Generic;
 
@@ -6,13 +8,18 @@ namespace CardDeck.Application.Services
 {
     public class DeckService : IDeckService
     {
-        public IList<Card> Build()
+        public IEnumerable<Card> Build()
         {
-            return new List<Card>
+            var suits = Enum.GetValues(typeof(CardSuit)).Cast<CardSuit>();
+            var ranks = Enum.GetValues(typeof(CardRank)).Cast<CardRank>();
+
+            foreach (var suit in suits)
             {
-                new Card { Rank = "2", Suit = CardSuit.Clubs },
-                new Card { Rank = "3", Suit = CardSuit.Clubs }
-            };
+                foreach (var rank in ranks)
+                {
+                    yield return new Card(suit, rank);
+                }
+            }
         }
     }
 }

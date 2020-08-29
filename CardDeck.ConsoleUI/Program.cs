@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CardDeck.Domain.Entities;
 using CardDeck.Application.Iterator;
 using CardDeck.Application.Services;
@@ -15,7 +16,10 @@ namespace CardDeck.ConsoleUI
             Console.Title = "Deck of Cards";
             ServiceLocator.Setup();
 
-            var deck = deckService.Build();
+            var deck = deckService
+                .Build()
+                .ToList();
+
             deck.Shuffle();
 
             var iterator = new Iterator<Card>(deck);
