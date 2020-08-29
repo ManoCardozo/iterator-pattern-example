@@ -2,34 +2,47 @@
 using CardDeck.Domain.Entities;
 using CardDeck.Application.Iterator;
 using CardDeck.Application.Services;
+using CardDeck.Application.Extensions;
 
 namespace CardDeck.ConsoleUI
 {
     class Program
     {
+        private static readonly IDeckService deckService = ServiceLocator.Get<IDeckService>();
+
         static void Main(string[] args)
         {
             Console.Title = "Deck of Cards";
             ServiceLocator.Setup();
 
-            var deckService = ServiceLocator.Get<IDeckService>();
             var deck = deckService.Build();
+            deck.Shuffle();
+
             var iterator = new Iterator<Card>(deck);
 
-            while(iterator.HasNext())
+            var displayAll = false;
+            while(iterator.HasNext() || displayAll)
             {
                 var card = iterator.Next();
 
-                Display(card);
+                Console.Clear();
+                CardView.Render(card);
+                RenderOptions();
+                
+                var input = Console.ReadKey();
+                displayAll = input.KeyChar == 'a';
             }
 
-            Console.ReadLine();
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
         }
 
-        private static void Display(Card card)
+        private static void RenderOptions()
         {
-            Console.WriteLine(card.Rank);
-            Console.WriteLine(card.Suit);
+            Console.WriteLine();
+            Console.WriteLine("- [N]ext");
+            Console.WriteLine("- Display [A]ll");
         }
     }
 }
