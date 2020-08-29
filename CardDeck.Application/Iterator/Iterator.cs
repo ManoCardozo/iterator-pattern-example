@@ -1,31 +1,31 @@
-﻿using CardDeck.Application.Collection;
+﻿using System.Collections.Generic;
 
 namespace CardDeck.Application.Iterator
 {
     public class Iterator<TItem> : IIterator<TItem> where TItem : class
     {
-        private readonly Collection<TItem> collection;
+        private readonly IList<TItem> collection;
         private int current = 0;
 
-        public Iterator(Collection<TItem> collection)
+        public Iterator(IList<TItem> collection)
         {
             this.collection = collection;
         }
 
         public TItem Next()
         {
-            current++;
-
-            var next = !IsCompleted
-                ? collection.Get(current)
+            var next = HasNext()
+                ? collection[current]
                 : null;
+
+            current++;
 
             return next;
         }
 
-        private bool IsCompleted
+        public bool HasNext()
         {
-            get { return current >= collection.Count; }
+            return current < collection.Count;
         }
     }
 }

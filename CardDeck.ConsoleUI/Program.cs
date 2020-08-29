@@ -1,4 +1,7 @@
 ﻿using System;
+using CardDeck.Domain.Entities;
+using CardDeck.Application.Iterator;
+using CardDeck.Application.Services;
 
 namespace CardDeck.ConsoleUI
 {
@@ -6,13 +9,27 @@ namespace CardDeck.ConsoleUI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.Title = "Deck of Cards";
+            ServiceLocator.Setup();
 
-            //Build deck of cards
+            var deckService = ServiceLocator.Get<IDeckService>();
+            var deck = deckService.Build();
+            var iterator = new Iterator<Card>(deck);
 
-            //Display first card
+            while(iterator.HasNext())
+            {
+                var card = iterator.Next();
 
-            //Wait for next
+                Display(card);
+            }
+
+            Console.ReadLine();
+        }
+
+        private static void Display(Card card)
+        {
+            Console.WriteLine(card.Rank);
+            Console.WriteLine(card.Suit);
         }
     }
 }
