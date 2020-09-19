@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IteratorPatternExample\CardDeck.Domain.csproj" />
+    <ProjectReference Include="..\CardDeck.Domain\CardDeck.Domain.csproj" />
   </ItemGroup>
 
 </Project>
